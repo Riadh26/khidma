@@ -43,7 +43,7 @@ export const JobPostForm: React.FC<JobPostFormProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded-2xl w-full max-w-md h-[90vh] flex flex-col overflow-hidden">
         <div className="p-4 border-b border-gray-100 flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-900">Post a Job</h2>
           <button 
@@ -54,7 +54,8 @@ export const JobPostForm: React.FC<JobPostFormProps> = ({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto">
+          <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Service Type
@@ -113,7 +114,7 @@ export const JobPostForm: React.FC<JobPostFormProps> = ({
                 value={formData.budget}
                 onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                 placeholder="5000"
-                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
                 required
               />
             </div>
@@ -133,9 +134,9 @@ export const JobPostForm: React.FC<JobPostFormProps> = ({
                   key={urgency.value}
                   type="button"
                   onClick={() => setFormData({ ...formData, urgency: urgency.value as any })}
-                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex-1 py-3 px-3 rounded-xl text-sm font-medium transition-colors ${
                     formData.urgency === urgency.value
-                      ? urgency.color
+                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -155,35 +156,36 @@ export const JobPostForm: React.FC<JobPostFormProps> = ({
                 type="text"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
                 required
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors cursor-pointer">
+            <div className="flex items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-400 transition-colors cursor-pointer bg-gray-50">
             <div className="text-center">
               <Camera className="w-8 h-8 text-gray-400 mx-auto mb-2" />
               <p className="text-sm text-gray-600">Add photos (optional)</p>
             </div>
           </div>
 
-          <div className="flex space-x-3 pt-4">
-            <button
+            <div className="flex space-x-3 pt-6 pb-4">
+                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-gray-50"
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                className="flex-1 py-4 px-4 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="flex-1 py-4 px-4 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-lg"
             >
               Post Job
             </button>
           </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

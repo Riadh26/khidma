@@ -45,21 +45,21 @@
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
+  background: #f8fafc;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
+  background: #cbd5e1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: #94a3b8;
 }
 
 /* Smooth transitions */
@@ -78,6 +78,25 @@ textarea:focus {
   outline-offset: 2px;
 }
 
+/* Enhanced button hover effects */
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Gradient backgrounds */
+.gradient-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Card shadows */
+.card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 /* Custom styles for better mobile experience */
 @media (max-width: 640px) {
   .text-responsive {
@@ -87,5 +106,10 @@ textarea:focus {
   /* Ensure proper scrolling on mobile */
   .overflow-y-auto {
     -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Better touch targets on mobile */
+  button {
+    min-height: 44px;
   }
 }

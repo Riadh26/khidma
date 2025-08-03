@@ -14,7 +14,7 @@ export const MapView: React.FC<MapViewProps> = ({
   userLocation 
 }) => {
   return (
-    <div className="relative flex-1 bg-gradient-to-br from-blue-50 to-green-50 overflow-hidden min-h-0">
+    <div className="relative w-full h-full bg-gradient-to-br from-blue-50 to-green-50 overflow-hidden">
       {/* Simulated map background */}
       <div className="absolute inset-0 opacity-20">
         <div className="w-full h-full bg-gradient-to-br from-blue-100 via-green-50 to-blue-50"></div>
@@ -57,16 +57,16 @@ export const MapView: React.FC<MapViewProps> = ({
 
       {/* Map controls */}
       <div className="absolute bottom-4 right-4 flex flex-col space-y-2">
-        <button className="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center text-gray-600 hover:text-blue-600 transition-colors">
+        <button className="w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center text-gray-600 hover:text-blue-600 transition-colors">
           <span className="text-lg font-bold">+</span>
         </button>
-        <button className="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center text-gray-600 hover:text-blue-600 transition-colors">
+        <button className="w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center text-gray-600 hover:text-blue-600 transition-colors">
           <span className="text-lg font-bold">−</span>
         </button>
       </div>
 
       {/* Location info */}
-      <div className="absolute top-4 left-4 bg-white px-3 py-2 rounded-lg shadow-md">
+      <div className="absolute top-4 left-4 bg-white px-4 py-3 rounded-xl shadow-lg">
         <p className="text-sm text-gray-600">Algiers, Algeria</p>
         <p className="text-xs text-gray-500">{workers.length} workers nearby</p>
       </div>

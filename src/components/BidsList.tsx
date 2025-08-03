@@ -21,38 +21,38 @@ export const BidsList: React.FC<BidsListProps> = ({
   };
 
   return (
-    <div className="space-y-4 overflow-y-auto flex-1">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-xl font-bold text-gray-900">
           Received Bids ({bids.length})
         </h3>
-        <div className="text-sm text-gray-600">
-          Sort by: <span className="font-medium">Lowest Price</span>
+        <div className="text-sm text-gray-500">
+          Sort by: <span className="font-medium text-blue-600">Lowest Price</span>
         </div>
       </div>
 
       {bids.length === 0 ? (
         <div className="text-center py-12">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
             <MessageCircle className="w-8 h-8 text-gray-400" />
           </div>
-          <h4 className="text-lg font-medium text-gray-900 mb-2">No bids yet</h4>
+          <h4 className="text-xl font-bold text-gray-900 mb-2">No bids yet</h4>
           <p className="text-gray-600">Workers will start bidding on your job soon!</p>
         </div>
       ) : (
-        <div className="space-y-3 pb-20">
+        <div className="space-y-4">
           {bids.map((bid) => (
-            <div key={bid.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div key={bid.id} className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:border-blue-200">
               <div className="flex items-start space-x-4">
                 <img 
                   src={bid.worker.avatar} 
                   alt={bid.worker.name}
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-14 h-14 rounded-full object-cover border-2 border-gray-100"
                 />
                 <div className="flex-1">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h4 className="font-semibold text-gray-900">{bid.worker.name}</h4>
+                      <h4 className="font-bold text-gray-900 text-lg">{bid.worker.name}</h4>
                       <div className="flex items-center space-x-2 text-sm text-gray-600">
                         <div className="flex items-center">
                           <Star className="w-4 h-4 text-yellow-400 mr-1" />
@@ -68,28 +68,28 @@ export const BidsList: React.FC<BidsListProps> = ({
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xl font-bold text-green-600">
+                      <div className="text-2xl font-bold text-green-600">
                         {bid.price.toLocaleString()} DA
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-gray-500 font-medium">
                         ETA: {bid.estimatedArrival}
                       </div>
                     </div>
                   </div>
                   
-                  <p className="text-gray-700 mt-2 text-sm">{bid.message}</p>
+                  <p className="text-gray-700 mt-3 text-sm leading-relaxed bg-gray-50 p-3 rounded-xl">{bid.message}</p>
                   
                   <div className="flex space-x-3 mt-4">
                     <button
                       onClick={() => onAcceptBid(bid)}
-                      className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                      className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-green-700 transition-all duration-300 shadow-lg hover:shadow-xl"
                     >
                       <CheckCircle className="w-4 h-4" />
                       <span>Accept Bid</span>
                     </button>
                     <button
                       onClick={() => onMessageWorker(bid)}
-                      className="flex items-center space-x-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
+                      className="flex items-center space-x-2 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl text-sm font-bold hover:bg-gray-200 transition-all duration-300"
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>Message</span>

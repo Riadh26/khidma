@@ -37,6 +37,15 @@ function App() {
     }
   }, [selectedService]);
 
+  // Filter workers based on current job's service type
+  useEffect(() => {
+    if (currentJob) {
+      setFilteredWorkers(mockWorkers.filter(worker => 
+        worker.serviceType.id === currentJob.serviceType.id
+      ));
+    }
+  }, [currentJob]);
+
   const handleLogin = (email: string, password: string) => {
     // Mock login - in real app, this would call an API
     setAuthState({
@@ -68,6 +77,8 @@ function App() {
       user: null
     });
     setViewMode('map');
+    setCurrentJob(null);
+    setSelectedService(null);
   };
 
   const handleWorkerClick = (worker: ServiceWorker) => {
@@ -105,6 +116,7 @@ function App() {
       status: 'open'
     };
     setCurrentJob(newJob);
+    setSelectedService(jobData.serviceType!);
     setViewMode('bids');
     
     // Simulate new bids coming in with popup notifications
@@ -155,7 +167,7 @@ function App() {
   const renderCurrentView = () => {
     if (!authState.isAuthenticated) {
       return (
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto min-h-0">
           <ServiceGrid
             services={serviceTypes}
             onServiceSelect={handleServiceSelect}
@@ -168,15 +180,33 @@ function App() {
       case 'map':
         return (
           <div className="flex flex-col flex-1 min-h-0">
+            {selectedService && (
+              <div className="bg-blue-50 px-4 py-3 border-b border-blue-100">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl">{selectedService.icon}</span>
+                    <span className="font-medium text-blue-900">
+                      Looking for {selectedService.name}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setSelectedService(null)}
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+            )}
             <MapView
               workers={filteredWorkers}
               onWorkerClick={handleWorkerClick}
               userLocation={{ lat: 36.7372, lng: 3.0869 }}
             />
-            <div className="p-4 bg-white border-t border-gray-100">
+            <div className="p-6 bg-white border-t border-gray-100">
               <button
                 onClick={handlePostJobClick}
-                className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-5 px-6 rounded-2xl font-bold text-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
               >
                 🔍 Post a Job Request
               </button>
@@ -195,36 +225,38 @@ function App() {
       
       case 'bids':
         return (
-          <div className="flex flex-col flex-1 bg-gray-50 min-h-0">
-            <div className="mb-4">
+          <div className="flex flex-col flex-1 bg-gray-50 min-h-0 overflow-hidden">
+            <div className="p-4 bg-white border-b border-gray-100">
               <button
                 onClick={() => setViewMode('map')}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+                className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors font-medium"
               >
                 <ArrowLeft className="w-5 h-5" />
                 <span>Back to Map</span>
               </button>
+            
+              {currentJob && (
+                <div className="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">{currentJob.title}</h2>
+                  <p className="text-gray-600 mb-3">{currentJob.description}</p>
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <span className="font-medium">Budget: {currentJob.budget.toLocaleString()} DA</span>
+                    <span>•</span>
+                    <span className="capitalize font-medium">{currentJob.urgency} priority</span>
+                    <span>•</span>
+                    <span className="font-medium">{currentJob.serviceType.name}</span>
+                  </div>
+                </div>
+              )}
             </div>
             
-            {currentJob && (
-              <div className="bg-white rounded-lg p-4 mb-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-2">{currentJob.title}</h2>
-                <p className="text-gray-600 mb-2">{currentJob.description}</p>
-                <div className="flex items-center space-x-4 text-sm text-gray-600">
-                  <span>Budget: {currentJob.budget.toLocaleString()} DA</span>
-                  <span>•</span>
-                  <span className="capitalize">{currentJob.urgency} priority</span>
-                  <span>•</span>
-                  <span>{currentJob.serviceType.name}</span>
-                </div>
-              </div>
-            )}
-            
-            <BidsList
-              bids={bids}
-              onAcceptBid={handleAcceptBid}
-              onMessageWorker={handleMessageFromBid}
-            />
+            <div className="flex-1 overflow-y-auto p-4">
+              <BidsList
+                bids={bids}
+                onAcceptBid={handleAcceptBid}
+                onMessageWorker={handleMessageFromBid}
+              />
+            </div>
           </div>
         );
       
