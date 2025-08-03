@@ -139,6 +139,9 @@ export const JobPostForm: React.FC<JobPostFormProps> = ({
                 className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
+                      ? urgency.color
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
                 >
                   {urgency.label}
                 </button>
@@ -171,6 +174,7 @@ export const JobPostForm: React.FC<JobPostFormProps> = ({
 
             <div className="flex space-x-3 pt-6 pb-4">
                 className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-gray-50"
+            <button
               type="button"
               onClick={onClose}
                 className="flex-1 py-4 px-4 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
