@@ -32,6 +32,10 @@ export interface JobRequest {
   urgency: 'low' | 'medium' | 'high';
   postedAt: Date;
   status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+  acceptedBid?: Bid;
+  completedAt?: Date;
+  review?: WorkerReview;
+  bids?: Bid[];
 }
 
 export interface Bid {
@@ -46,6 +50,15 @@ export interface Bid {
   status: 'pending' | 'accepted' | 'rejected';
 }
 
+export interface WorkerReview {
+  id: string;
+  jobId: string;
+  workerId: string;
+  rating: number;
+  comment: string;
+  submittedAt: Date;
+}
+
 export interface ServiceType {
   id: string;
   name: string;
@@ -54,7 +67,7 @@ export interface ServiceType {
   description: string;
 }
 
-export type ViewMode = 'map' | 'post-job' | 'bids' | 'worker-profile';
+export type ViewMode = 'map' | 'post-job' | 'bids' | 'worker-profile' | 'my-jobs';
 
 export interface User {
   id: string;
@@ -75,4 +88,32 @@ export interface BidNotification {
   bid: Bid;
   timestamp: Date;
   isRead: boolean;
+}
+
+export interface Message {
+  id: string;
+  senderId: string;
+  senderName: string;
+  senderAvatar: string;
+  content: string;
+  timestamp: Date;
+  isRead: boolean;
+  type: 'text' | 'image' | 'location';
+}
+
+export interface Chat {
+  id: string;
+  workerId: string;
+  worker: ServiceWorker;
+  messages: Message[];
+  lastMessage?: Message;
+  unreadCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ChatState {
+  chats: Chat[];
+  activeChatId: string | null;
+  isLoading: boolean;
 }

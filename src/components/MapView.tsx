@@ -5,12 +5,14 @@ import { Star, Phone, MessageCircle, MapPin, Clock, Navigation } from 'lucide-re
 interface MapViewProps {
   workers: ServiceWorker[];
   onWorkerClick: (worker: ServiceWorker) => void;
+  onWorkerMessage: (worker: ServiceWorker) => void;
   userLocation: { lat: number; lng: number };
 }
 
 export const MapView: React.FC<MapViewProps> = ({ 
   workers, 
   onWorkerClick, 
+  onWorkerMessage,
   userLocation 
 }) => {
   const [userPosition, setUserPosition] = useState<{ lat: number; lng: number }>({
@@ -56,9 +58,9 @@ export const MapView: React.FC<MapViewProps> = ({
   };
 
   const handleWorkerContact = (worker: ServiceWorker) => {
-    const message = `Hello ${worker.name}, I found you on Khidma DZ and I'm interested in your ${worker.serviceType.name} services. Are you available?`;
-    const whatsappUrl = `https://wa.me/${worker.phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    // Use the in-app messaging system instead of WhatsApp
+    onWorkerMessage(worker);
+    setSelectedWorker(null); // Close the popup
   };
 
   const handleWorkerCall = (worker: ServiceWorker) => {
@@ -252,14 +254,14 @@ export const MapView: React.FC<MapViewProps> = ({
               <div className="flex space-x-3">
                 <button 
                   onClick={() => handleWorkerCall(selectedWorker)}
-                  className="flex-1 bg-green-600 text-white py-4 px-4 rounded-2xl font-bold hover:bg-green-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
+                  className="flex-1 bg-green-600 text-white py-4 px-4 rounded-2xl font-bold hover:bg-green-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl hover-lift"
                 >
                   <Phone className="w-5 h-5" />
                   <span>Call Now</span>
                 </button>
                 <button 
                   onClick={() => handleWorkerContact(selectedWorker)}
-                  className="flex-1 bg-blue-600 text-white py-4 px-4 rounded-2xl font-bold hover:bg-blue-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 px-4 rounded-2xl font-bold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl hover-lift"
                 >
                   <MessageCircle className="w-5 h-5" />
                   <span>Message</span>

@@ -1,23 +1,31 @@
 import React from 'react';
-import { MapPin, Bell, User, LogOut } from 'lucide-react';
+import { MapPin, Bell, User, LogOut, MessageCircle, Filter } from 'lucide-react';
 import { User as UserType } from '../types';
 
 interface HeaderProps {
   user: UserType | null;
   isAuthenticated: boolean;
   onNotificationClick: () => void;
+  onMessagesClick: () => void;
+  onFilterClick: () => void;
   onAuthClick: () => void;
   onLogout: () => void;
   notificationCount: number;
+  unreadMessagesCount: number;
+  selectedService: any;
 }
 
 export const Header: React.FC<HeaderProps> = ({ 
   user,
   isAuthenticated,
-  onNotificationClick, 
+  onNotificationClick,
+  onMessagesClick,
+  onFilterClick,
   onAuthClick,
   onLogout,
-  notificationCount 
+  notificationCount,
+  unreadMessagesCount,
+  selectedService
 }) => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 px-4 py-3">
@@ -38,6 +46,30 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center space-x-3">
           {isAuthenticated ? (
             <>
+              <button 
+                onClick={onFilterClick}
+                className={`relative p-2 rounded-xl transition-colors ${
+                  selectedService 
+                    ? 'bg-blue-100 text-blue-600' 
+                    : 'text-gray-600 hover:text-blue-600'
+                }`}
+              >
+                <Filter className="w-6 h-6" />
+                {selectedService && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full"></div>
+                )}
+              </button>
+              <button 
+                onClick={onMessagesClick}
+                className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                <MessageCircle className="w-6 h-6" />
+                {unreadMessagesCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                    {unreadMessagesCount}
+                  </span>
+                )}
+              </button>
               <button 
                 onClick={onNotificationClick}
                 className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors"

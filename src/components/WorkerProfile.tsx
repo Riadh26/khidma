@@ -16,7 +16,7 @@ export const WorkerProfile: React.FC<WorkerProfileProps> = ({
   onMessage
 }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-end justify-center">
       <div className="bg-white rounded-t-3xl w-full max-w-md max-h-[85vh] overflow-hidden animate-slideUp shadow-2xl">
         <div className="p-4 border-b border-gray-100">
           <div className="flex items-start justify-between">
@@ -92,14 +92,14 @@ export const WorkerProfile: React.FC<WorkerProfileProps> = ({
           <div className="flex space-x-4 pt-2">
             <button 
               onClick={() => onContact(worker)}
-              className="flex-1 bg-blue-600 text-white py-4 px-4 rounded-2xl font-bold hover:bg-blue-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
+              className="flex-1 bg-blue-600 text-white py-4 px-4 rounded-2xl font-bold hover:bg-blue-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl hover-lift"
             >
               <Phone className="w-5 h-5" />
               <span>Call Now</span>
             </button>
             <button 
               onClick={() => onMessage(worker)}
-              className="flex-1 bg-gray-100 text-gray-700 py-4 px-4 rounded-2xl font-bold hover:bg-gray-200 transition-all duration-300 flex items-center justify-center space-x-2"
+              className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-4 px-4 rounded-2xl font-bold hover:from-green-600 hover:to-green-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl hover-lift"
             >
               <MessageCircle className="w-5 h-5" />
               <span>Message</span>

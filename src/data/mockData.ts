@@ -1,4 +1,4 @@
-import { ServiceWorker, ServiceType, JobRequest, Bid } from '../types';
+import { ServiceWorker, ServiceType, JobRequest, Bid, Chat, Message, BidNotification } from '../types';
 
 export const mockUser = {
   id: '1',
@@ -78,6 +78,36 @@ export const mockWorkers: ServiceWorker[] = [
     location: { lat: 36.7332, lng: 3.0909 },
     completedJobs: 45,
     responseTime: '< 15 min'
+  },
+  {
+    id: '5',
+    name: 'Omar Tarek',
+    avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150',
+    phone: '+213 555 567 890',
+    serviceType: serviceTypes[3],
+    rating: 4.5,
+    reviewCount: 98,
+    hourlyRate: 2800,
+    distance: 0.5,
+    isOnline: true,
+    location: { lat: 36.7372, lng: 3.0869 },
+    completedJobs: 123,
+    responseTime: '< 8 min'
+  },
+  {
+    id: '6',
+    name: 'Leila Mansouri',
+    avatar: 'https://images.pexels.com/photos/3756681/pexels-photo-3756681.jpeg?auto=compress&cs=tinysrgb&w=150',
+    phone: '+213 555 678 901',
+    serviceType: serviceTypes[4],
+    rating: 4.9,
+    reviewCount: 145,
+    hourlyRate: 2400,
+    distance: 1.5,
+    isOnline: true,
+    location: { lat: 36.7432, lng: 3.0849 },
+    completedJobs: 178,
+    responseTime: '< 6 min'
   }
 ];
 
@@ -103,5 +133,116 @@ export const mockBids: Bid[] = [
     estimatedArrival: '45 minutes',
     submittedAt: new Date(Date.now() - 8 * 60 * 1000),
     status: 'pending'
+  }
+];
+
+export const mockMessages: Message[] = [
+  {
+    id: '1',
+    senderId: '1',
+    senderName: 'Ahmed Benali',
+    senderAvatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150',
+    content: 'Hello! I can help you with your plumbing issue. When would you like me to come?',
+    timestamp: new Date(Date.now() - 30 * 60 * 1000),
+    isRead: true,
+    type: 'text'
+  },
+  {
+    id: '2',
+    senderId: 'user',
+    senderName: 'You',
+    senderAvatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150',
+    content: 'Hi Ahmed! I have a leaky faucet in my kitchen. Can you come today?',
+    timestamp: new Date(Date.now() - 25 * 60 * 1000),
+    isRead: true,
+    type: 'text'
+  },
+  {
+    id: '3',
+    senderId: '1',
+    senderName: 'Ahmed Benali',
+    senderAvatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150',
+    content: 'Of course! I can be there in 30 minutes. What\'s your address?',
+    timestamp: new Date(Date.now() - 20 * 60 * 1000),
+    isRead: true,
+    type: 'text'
+  },
+  {
+    id: '4',
+    senderId: 'user',
+    senderName: 'You',
+    senderAvatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150',
+    content: 'Great! I\'m at 123 Rue Didouche Mourad, Algiers. How much will it cost?',
+    timestamp: new Date(Date.now() - 15 * 60 * 1000),
+    isRead: true,
+    type: 'text'
+  },
+  {
+    id: '5',
+    senderId: '1',
+    senderName: 'Ahmed Benali',
+    senderAvatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150',
+    content: 'For a leaky faucet repair, it will be around 5000-8000 DA depending on the parts needed. I\'ll give you a precise quote when I see the issue.',
+    timestamp: new Date(Date.now() - 10 * 60 * 1000),
+    isRead: false,
+    type: 'text'
+  }
+];
+
+export const mockChats: Chat[] = [
+  {
+    id: 'chat-1',
+    workerId: '1',
+    worker: mockWorkers[0],
+    messages: mockMessages,
+    lastMessage: mockMessages[mockMessages.length - 1],
+    unreadCount: 1,
+    createdAt: new Date(Date.now() - 60 * 60 * 1000),
+    updatedAt: new Date(Date.now() - 10 * 60 * 1000)
+  },
+  {
+    id: 'chat-2',
+    workerId: '2',
+    worker: mockWorkers[1],
+    messages: [
+      {
+        id: '6',
+        senderId: '2',
+        senderName: 'Fatima Kadri',
+        senderAvatar: 'https://images.pexels.com/photos/3756681/pexels-photo-3756681.jpeg?auto=compress&cs=tinysrgb&w=150',
+        content: 'Hello! I\'m available for cleaning services. What do you need?',
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+        isRead: true,
+        type: 'text'
+      }
+    ],
+    lastMessage: {
+      id: '6',
+      senderId: '2',
+      senderName: 'Fatima Kadri',
+      senderAvatar: 'https://images.pexels.com/photos/3756681/pexels-photo-3756681.jpeg?auto=compress&cs=tinysrgb&w=150',
+      content: 'Hello! I\'m available for cleaning services. What do you need?',
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      isRead: true,
+      type: 'text'
+    },
+    unreadCount: 0,
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000)
+  }
+];
+
+export const mockBidNotifications: BidNotification[] = [
+  {
+    id: 'notification-1',
+    bid: mockBids[0],
+    timestamp: new Date(Date.now() - 5 * 60 * 1000),
+    isRead: false
+  },
+  {
+    id: 'notification-2',
+    bid: mockBids[1],
+    timestamp: new Date(Date.now() - 10 * 60 * 1000),
+    isRead: true
   }
 ];

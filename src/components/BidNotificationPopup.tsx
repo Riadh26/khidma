@@ -31,7 +31,7 @@ export const BidNotificationPopup: React.FC<BidNotificationPopupProps> = ({
   if (!bid) return null;
 
   return (
-    <div className={`fixed top-4 left-4 right-4 z-50 transition-all duration-300 ${
+    <div className={`fixed top-4 left-4 right-4 z-[9999] transition-all duration-300 ${
       isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
     }`}>
       <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 mx-auto max-w-sm">
