@@ -2,6 +2,7 @@ export interface ServiceWorker {
   id: string;
   name: string;
   avatar: string;
+  phone: string;
   serviceType: ServiceType;
   rating: number;
   reviewCount: number;
