@@ -1,24 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Send, ArrowLeft, Phone, MoreVertical } from 'lucide-react';
 import { Chat, Message } from '../types';
-import { ArrowLeft, Send, Paperclip, Phone, MapPin } from 'lucide-react';
 
 interface ChatViewProps {
   chat: Chat;
-  onClose: () => void;
   onSendMessage: (content: string) => void;
-  onCallWorker: (worker: any) => void;
+  onClose: () => void;
+  onBack: () => void;
 }
 
 export const ChatView: React.FC<ChatViewProps> = ({
   chat,
-  onClose,
   onSendMessage,
-  onCallWorker
+  onClose,
+  onBack
 }) => {
-  const [message, setMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -29,15 +27,9 @@ export const ChatView: React.FC<ChatViewProps> = ({
   }, [chat.messages]);
 
   const handleSendMessage = () => {
-    if (message.trim()) {
-      onSendMessage(message.trim());
-      setMessage('');
-      setIsTyping(true);
-      
-      // Hide typing indicator after 2 seconds
-      setTimeout(() => {
-        setIsTyping(false);
-      }, 2000);
+    if (newMessage.trim()) {
+      onSendMessage(newMessage.trim());
+      setNewMessage('');
     }
   };
 
@@ -52,173 +44,126 @@ export const ChatView: React.FC<ChatViewProps> = ({
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  const isToday = (date: Date) => {
-    const today = new Date();
-    return date.toDateString() === today.toDateString();
-  };
-
   const formatDate = (date: Date) => {
-    if (isToday(date)) {
-      return 'Today';
-    }
-    const yesterday = new Date();
+    const today = new Date();
+    const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    if (date.toDateString() === yesterday.toDateString()) {
-      return 'Yesterday';
-    }
-    return date.toLocaleDateString();
-  };
 
-  const groupedMessages = chat.messages.reduce((groups: any[], message) => {
-    const date = formatDate(message.timestamp);
-    const lastGroup = groups[groups.length - 1];
-    
-    if (lastGroup && lastGroup.date === date) {
-      lastGroup.messages.push(message);
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
     } else {
-      groups.push({ date, messages: [message] });
+      return date.toLocaleDateString();
     }
-    
-    return groups;
-  }, []);
+  };
 
   return (
-    <div className="fixed inset-0 bg-white z-[9999] flex flex-col animate-slideInRight">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 shadow-lg">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-white hover:bg-opacity-20 rounded-xl transition-colors"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
-          
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl w-full max-w-md h-[90vh] overflow-hidden shadow-2xl animate-fadeIn flex flex-col">
+        {/* Header */}
+        <div className="p-4 border-b border-gray-100 flex-shrink-0 flex items-center justify-between bg-gradient-to-r from-orange-600 to-orange-700 text-white">
           <div className="flex items-center space-x-3">
-            <div className="relative">
-              <img
-                src={chat.worker.avatar}
-                alt={chat.worker.name}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${
-                chat.worker.isOnline ? 'bg-green-500' : 'bg-gray-400'
-              }`}></div>
-            </div>
-            <div>
-              <h3 className="font-semibold">{chat.worker.name}</h3>
-              <p className="text-xs text-blue-100">{chat.worker.serviceType.name}</p>
-            </div>
-          </div>
-          
-          <button
-            onClick={() => onCallWorker(chat.worker)}
-            className="p-2 hover:bg-white hover:bg-opacity-20 rounded-xl transition-colors"
-          >
-            <Phone className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
-        {groupedMessages.map((group, groupIndex) => (
-          <div key={groupIndex} className="mb-6">
-            <div className="flex justify-center mb-4">
-              <span className="bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded-full">
-                {group.date}
-              </span>
-            </div>
-            
-            {group.messages.map((msg: Message) => (
-              <div
-                key={msg.id}
-                className={`flex mb-4 animate-bounceIn ${msg.senderId === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className={`max-w-xs lg:max-w-md ${msg.senderId === 'user' ? 'order-2' : 'order-1'}`}>
-                  {msg.senderId !== 'user' && (
-                    <img
-                      src={msg.senderAvatar}
-                      alt={msg.senderName}
-                      className="w-8 h-8 rounded-full object-cover mb-1"
-                    />
-                  )}
-                </div>
-                
-                <div className={`max-w-xs lg:max-w-md ${msg.senderId === 'user' ? 'order-1' : 'order-2'}`}>
-                  <div
-                    className={`rounded-2xl px-4 py-3 message-bubble ${
-                      msg.senderId === 'user'
-                        ? 'bg-blue-600 text-white sent'
-                        : 'bg-white text-gray-900 border border-gray-200 received'
-                    }`}
-                  >
-                    <p className="text-sm">{msg.content}</p>
-                    <p className={`text-xs mt-1 ${
-                      msg.senderId === 'user' ? 'text-blue-100' : 'text-gray-500'
-                    }`}>
-                      {formatTime(msg.timestamp)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ))}
-        
-        {/* Typing indicator */}
-        {isTyping && (
-          <div className="flex justify-start mb-4">
-            <div className="max-w-xs lg:max-w-md order-2">
-              <img
-                src={chat.worker.avatar}
-                alt={chat.worker.name}
-                className="w-8 h-8 rounded-full object-cover mb-1"
-              />
-            </div>
-            <div className="max-w-xs lg:max-w-md order-1">
-              <div className="typing-indicator">
-                <div className="typing-dot"></div>
-                <div className="typing-dot"></div>
-                <div className="typing-dot"></div>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input */}
-      <div className="bg-white border-t border-gray-200 p-4 message-input">
-        <div className="flex items-center space-x-3">
-          <button className="p-2 text-gray-500 hover:text-blue-600 transition-colors">
-            <Paperclip className="w-5 h-5" />
-          </button>
-          
-          <div className="flex-1 relative">
-            <input
-              ref={inputRef}
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
-              className="w-full bg-gray-100 rounded-2xl px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+            <button
+              onClick={onBack}
+              className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <img 
+              src={chat.worker.avatar} 
+              alt={chat.worker.name}
+              className="w-10 h-10 rounded-full flex-shrink-0"
             />
+            <div className="min-w-0">
+              <h3 className="font-semibold truncate">{chat.worker.name}</h3>
+              <p className="text-sm opacity-90 truncate">{chat.worker.serviceType.name}</p>
+            </div>
           </div>
-          
-          <button
-            onClick={handleSendMessage}
-            disabled={!message.trim()}
-            className={`p-3 rounded-full transition-all ${
-              message.trim()
-                ? 'bg-blue-600 text-white hover:bg-blue-700 hover-lift'
-                : 'bg-gray-200 text-gray-400'
-            }`}
-          >
-            <Send className="w-5 h-5" />
-          </button>
+          <div className="flex items-center space-x-2 flex-shrink-0">
+            <button className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors">
+              <Phone className="w-4 h-4" />
+            </button>
+            <button className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors">
+              <MoreVertical className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+          {chat.messages.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">👋</span>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Start a conversation</h3>
+              <p className="text-gray-500">Send a message to {chat.worker.name} to get started</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {chat.messages.map((message, index) => {
+                const isUser = message.senderId === 'user';
+                const showDate = index === 0 || 
+                  formatDate(message.timestamp) !== formatDate(chat.messages[index - 1].timestamp);
+
+                return (
+                  <div key={message.id}>
+                    {showDate && (
+                      <div className="text-center mb-4">
+                        <span className="bg-white px-3 py-1 rounded-full text-xs text-gray-500 shadow-sm">
+                          {formatDate(message.timestamp)}
+                        </span>
+                      </div>
+                    )}
+                    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[75%] px-4 py-2 rounded-2xl ${
+                        isUser 
+                          ? 'bg-orange-600 text-white' 
+                          : 'bg-white text-gray-900 border border-gray-200'
+                      }`}>
+                        <p className="text-sm break-words">{message.content}</p>
+                        <p className={`text-xs mt-1 ${
+                          isUser ? 'text-orange-100' : 'text-gray-500'
+                        }`}>
+                          {formatTime(message.timestamp)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              <div ref={messagesEndRef} />
+            </div>
+          )}
+        </div>
+
+        {/* Message Input */}
+        <div className="p-4 border-t border-gray-100 bg-white flex-shrink-0">
+          <div className="flex items-end space-x-3">
+            <div className="flex-1 relative">
+              <textarea
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Type a message..."
+                className="w-full p-3 pr-12 border border-gray-300 rounded-2xl resize-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                rows={1}
+                style={{ 
+                  minHeight: '44px', 
+                  maxHeight: '120px',
+                  overflowY: 'auto'
+                }}
+              />
+            </div>
+            <button
+              onClick={handleSendMessage}
+              disabled={!newMessage.trim()}
+              className="p-3 bg-orange-600 text-white rounded-2xl hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

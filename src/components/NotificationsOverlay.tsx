@@ -1,28 +1,24 @@
 import React from 'react';
-import { BidNotification, Bid } from '../types';
-import { X, Bell, MessageCircle } from 'lucide-react';
+import { X, Bell, Clock, User, DollarSign } from 'lucide-react';
+import { BidNotification } from '../types';
 
 interface NotificationsOverlayProps {
-  isOpen: boolean;
-  onClose: () => void;
   notifications: BidNotification[];
-  onViewBid: (bid: Bid) => void;
+  onClose: () => void;
+  onViewBid: (bid: any) => void;
 }
 
 export const NotificationsOverlay: React.FC<NotificationsOverlayProps> = ({
-  isOpen,
-  onClose,
   notifications,
+  onClose,
   onViewBid
 }) => {
-  if (!isOpen) return null;
-
   const formatTime = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
-    const minutes = Math.floor(diff / (1000 * 60));
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
 
     if (minutes < 1) return 'Just now';
     if (minutes < 60) return `${minutes}m ago`;
@@ -33,62 +29,74 @@ export const NotificationsOverlay: React.FC<NotificationsOverlayProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl w-full max-w-md max-h-[80vh] overflow-hidden shadow-2xl">
+      <div className="bg-white rounded-3xl w-full max-w-md h-[90vh] overflow-hidden shadow-2xl animate-fadeIn flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-gray-100">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Bell className="w-6 h-6 text-blue-600" />
-              <h2 className="text-xl font-bold text-gray-900">Notifications</h2>
+        <div className="p-6 border-b border-gray-100 flex-shrink-0 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-orange-600 to-orange-700 rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-lg">B</span>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-            >
-              <X className="w-5 h-5 text-gray-500" />
-            </button>
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Notifications</h2>
+              <p className="text-sm text-gray-500">{notifications.length} new bids</p>
+            </div>
           </div>
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <X className="w-5 h-5 text-gray-500" />
+          </button>
         </div>
 
         {/* Notifications List */}
         <div className="flex-1 overflow-y-auto">
           {notifications.length === 0 ? (
             <div className="p-8 text-center">
-              <Bell className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+              <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No notifications</h3>
-              <p className="text-gray-500">You'll see notifications here when you receive new bids</p>
+              <p className="text-gray-500">New bid notifications will appear here</p>
             </div>
           ) : (
             <div className="p-4 space-y-3">
               {notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className="bg-gray-50 rounded-2xl p-4 hover:bg-gray-100 transition-colors cursor-pointer"
                   onClick={() => onViewBid(notification.bid)}
+                  className="bg-gray-50 rounded-2xl p-4 cursor-pointer hover:bg-gray-100 transition-all border-2 border-transparent hover:border-orange-200"
                 >
                   <div className="flex items-start space-x-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <MessageCircle className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <DollarSign className="w-5 h-5 text-orange-600" />
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium text-gray-900">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-semibold text-gray-900 truncate">
                           New bid from {notification.bid.worker.name}
-                        </h4>
-                        <span className="text-xs text-gray-500">
+                        </h3>
+                        <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
                           {formatTime(notification.timestamp)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {notification.bid.worker.serviceType.name} • {notification.bid.price.toLocaleString()} DA
+                      <p className="text-sm text-gray-600 mb-2">
+                        {notification.bid.worker.name} offered {notification.bid.price.toLocaleString()} DA for your job
                       </p>
-                      <p className="text-xs text-gray-500 mt-2">
-                        "{notification.bid.message.substring(0, 60)}..."
-                      </p>
+                      <div className="flex items-center space-x-4 text-xs text-gray-500">
+                        <div className="flex items-center space-x-1">
+                          <User className="w-3 h-3" />
+                          <span>{notification.bid.worker.serviceType.name}</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Clock className="w-3 h-3" />
+                          <span>{notification.bid.estimatedArrival}</span>
+                        </div>
+                      </div>
+                      <div className="mt-3">
+                        <button className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors">
+                          View Details
+                        </button>
+                      </div>
                     </div>
-                    {!notification.isRead && (
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    )}
                   </div>
                 </div>
               ))}

@@ -9,9 +9,11 @@ export interface ServiceWorker {
   hourlyRate: number;
   distance: number;
   isOnline: boolean;
+  region: string; // Wilaya/region where the worker operates
   location: {
     lat: number;
     lng: number;
+    area?: string;
   };
   completedJobs: number;
   responseTime: string;
@@ -23,19 +25,31 @@ export interface JobRequest {
   description: string;
   serviceType: ServiceType;
   budget: number;
+  urgency: 'low' | 'medium' | 'high';
   location: {
     lat: number;
     lng: number;
     address: string;
   };
-  images?: string[];
-  urgency: 'low' | 'medium' | 'high';
-  postedAt: Date;
   status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+  postedAt: Date;
   acceptedBid?: Bid;
   completedAt?: Date;
   review?: WorkerReview;
   bids?: Bid[];
+  visitorTime?: {
+    type: 'all_day' | 'specific';
+    startTime?: string;
+    endTime?: string;
+    preferredDate?: string;
+  };
+  uploadedFiles?: Array<{
+    id: string;
+    file: File;
+    type: 'image' | 'video';
+    preview: string;
+    name: string;
+  }>;
 }
 
 export interface Bid {

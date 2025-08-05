@@ -469,3 +469,46 @@ textarea:focus {
   background: #F3F4F6 !important;
   color: #1F2937 !important;
 }
+
+/* Hide scrollbar for horizontal scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+  scroll-behavior: smooth; /* Smooth scrolling */
+  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
+/* Custom scrollbar for webkit browsers */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Mobile-specific scroll improvements */
+@media (max-width: 640px) {
+  .scrollbar-hide {
+    scroll-snap-type: x mandatory;
+  }
+  
+  .scrollbar-hide > * {
+    scroll-snap-align: start;
+  }
+}
